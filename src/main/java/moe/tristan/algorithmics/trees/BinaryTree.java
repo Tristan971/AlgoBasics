@@ -74,19 +74,19 @@ public class BinaryTree<T> {
     }
 
     public List<T> listKeysPrefix() {
-        return listNodes(this::visitPrefix).stream()
+        return listNodes(this::visitPrefix).stream().sequential()
                 .map((Function<BinaryTree<T>, T>) BinaryTree::getKey)
                 .collect(Collectors.toList());
     }
 
     public List<T> listKeysInfix() {
-        return listNodes(this::visitInfix).stream()
+        return listNodes(this::visitInfix).stream().sequential()
                 .map((Function<BinaryTree<T>, T>) BinaryTree::getKey)
                 .collect(Collectors.toList());
     }
 
     public List<T> listKeysSuffix() {
-        return listNodes(this::visitSuffix).stream()
+        return listNodes(this::visitSuffix).stream().sequential()
                 .map((Function<BinaryTree<T>, T>) BinaryTree::getKey)
                 .collect(Collectors.toList());
     }

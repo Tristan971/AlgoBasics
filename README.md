@@ -16,6 +16,7 @@ beside the point.
 #### Current content :
 - Binary trees
     - Height-balanced trees
+        - Perfect trees
 
 #### License :
 Do whatever you want.
