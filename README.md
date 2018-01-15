@@ -15,6 +15,7 @@ beside the point.
 
 #### Current content :
 - Binary trees
+    - Height-balanced trees
 
 #### License :
 Do whatever you want.
