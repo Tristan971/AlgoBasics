@@ -60,10 +60,7 @@ public class PerfectTree<T> extends HBalancedTree<T> {
     }
 
     private static <T> PerfectTree<T> fromArray(final Object[] backingArray, final Class<T> elementsClass) {
-        // support both string and int styles of size encoding
-        final int size = Integer.parseInt(backingArray[0].toString());
-
-        final PerfectTree<T> baseTree = new PerfectTree<>(
+        final PerfectTree<T> reconstruction = new PerfectTree<>(
                 elementsClass.cast(backingArray[1])
         );
 
@@ -75,8 +72,8 @@ public class PerfectTree<T> extends HBalancedTree<T> {
                 };
 
         final List<Function<T, PerfectTree<T>>> nextKeysAcceptors = new LinkedList<>();
-        nextKeysAcceptors.add(nextOpsSupplier.apply(baseTree::setLeft));
-        nextKeysAcceptors.add(nextOpsSupplier.apply(baseTree::setRight));
+        nextKeysAcceptors.add(nextOpsSupplier.apply(reconstruction::setLeft));
+        nextKeysAcceptors.add(nextOpsSupplier.apply(reconstruction::setRight));
 
 
         for (int i = 2; i < backingArray.length; i++) {
@@ -87,6 +84,6 @@ public class PerfectTree<T> extends HBalancedTree<T> {
             nextKeysAcceptors.add(nextOpsSupplier.apply(nodeAdded::setRight));
         }
 
-        return baseTree;
+        return reconstruction;
     }
 }
