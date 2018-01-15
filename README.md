@@ -15,3 +15,9 @@ beside the point.
 
 #### Current content :
 - Binary trees
+
+#### License :
+Do whatever you want.
+I would however strongly recommend against using this code 
+for anything remotely important, but hey, it's your choice
+in the end I guess so have fun.
