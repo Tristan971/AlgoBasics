@@ -66,4 +66,16 @@ class PerfectTreeTest {
     void shouldReturnFalseOnImperfect() {
         assertThat(imperfectTree.isPerfect()).isFalse();
     }
+
+    @Test
+    void shouldRetrurnArrayForPerfectTree() {
+        assertThat(perfectTree.toArray()).containsExactly(10, 8, 5, 1, 6, 2, 4, 7, 3, 18, 9);
+    }
+
+    @Test
+    void shouldReconstructPerfectTreeFromArray() {
+        final Integer[] backingArray = new Integer[]{10, 8, 5, 1, 6, 2, 4, 7, 3, 18, 9};
+        final PerfectTree<Integer> reconstructed = new PerfectTree<>(backingArray, Integer.class);
+        assertThat(reconstructed).isEqualTo(perfectTree);
+    }
 }

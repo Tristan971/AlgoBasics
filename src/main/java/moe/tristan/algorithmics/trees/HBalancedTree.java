@@ -10,6 +10,10 @@ public class HBalancedTree<T> extends BinaryTree<T> {
         super(key);
     }
 
+    public HBalancedTree(HBalancedTree<T> referenceTree) {
+        super(referenceTree);
+    }
+
     public boolean isBalanced() {
         return listNodes(this::visitInfix).stream().allMatch(node ->
                 node.isLeaf() || HBalancedTree.heightDiff(node) <= 1

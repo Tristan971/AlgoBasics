@@ -25,6 +25,14 @@ public class BinaryTree<T> {
         this(key, null, null);
     }
 
+    public BinaryTree(final BinaryTree<T> referenceTree) {
+        this(
+                referenceTree.key,
+                referenceTree.left,
+                referenceTree.right
+        );
+    }
+
     public int getSize() {
         return 1 + (left == null ? 0 : left.getSize()) + (right == null ? 0 : right.getSize());
     }

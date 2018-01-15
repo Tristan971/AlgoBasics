@@ -1,9 +1,8 @@
 package moe.tristan.algorithmics.trees;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class PerfectTree<T> extends HBalancedTree<T> {
@@ -14,6 +13,10 @@ public class PerfectTree<T> extends HBalancedTree<T> {
 
     public PerfectTree(T key) {
         super(key);
+    }
+
+    public PerfectTree(Object[] backingArray, final Class<T> elementsClass) {
+        super(fromArray(backingArray, elementsClass));
     }
 
     public boolean isPerfect() {
@@ -35,4 +38,55 @@ public class PerfectTree<T> extends HBalancedTree<T> {
         return true;
     }
 
+    public Object[] toArray() {
+        final int size = this.getSize();
+        final Object[] backingArray = new Object[size+1];
+        backingArray[0] = size;
+
+        List<BinaryTree<T>> elems = new ArrayList<>();
+        elems.add(this);
+        for (int i = 1; i <= size; i++) {
+            final BinaryTree<T> curElem = elems.remove(0);
+            backingArray[i] = curElem.getKey();
+            if (curElem.getLeft() != null) {
+                elems.add(curElem.getLeft());
+            }
+            if (curElem.getRight() != null) {
+                elems.add(curElem.getRight());
+            }
+        }
+
+        return backingArray;
+    }
+
+    private static <T> PerfectTree<T> fromArray(final Object[] backingArray, final Class<T> elementsClass) {
+        // support both string and int styles of size encoding
+        final int size = Integer.parseInt(backingArray[0].toString());
+
+        final PerfectTree<T> baseTree = new PerfectTree<>(
+                elementsClass.cast(backingArray[1])
+        );
+
+        final Function<Consumer<PerfectTree<T>>, Function<T, PerfectTree<T>>> nextOpsSupplier = childConsumer ->
+                aKey -> {
+                    final PerfectTree<T> createdNode = new PerfectTree<>(aKey);
+                    childConsumer.accept(createdNode);
+                    return createdNode;
+                };
+
+        final List<Function<T, PerfectTree<T>>> nextKeysAcceptors = new LinkedList<>();
+        nextKeysAcceptors.add(nextOpsSupplier.apply(baseTree::setLeft));
+        nextKeysAcceptors.add(nextOpsSupplier.apply(baseTree::setRight));
+
+
+        for (int i = 2; i < backingArray.length; i++) {
+            final PerfectTree<T> nodeAdded = nextKeysAcceptors
+                    .remove(0)
+                    .apply(elementsClass.cast(backingArray[i]));
+            nextKeysAcceptors.add(nextOpsSupplier.apply(nodeAdded::setLeft));
+            nextKeysAcceptors.add(nextOpsSupplier.apply(nodeAdded::setRight));
+        }
+
+        return baseTree;
+    }
 }
