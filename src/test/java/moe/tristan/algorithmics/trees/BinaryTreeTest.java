@@ -67,17 +67,17 @@ class BinaryTreeTest {
 
     @Test
     void listPrefix() {
-        assertThat(testTree.listPrefix()).containsExactly(1, 5, 3, 7, 10, 8, 9);
+        assertThat(testTree.listKeysPrefix()).containsExactly(1, 5, 3, 7, 10, 8, 9);
     }
 
     @Test
     void listInfix() {
-        assertThat(testTree.listInfix()).containsExactly(5, 3, 1, 10, 7, 9, 8);
+        assertThat(testTree.listKeysInfix()).containsExactly(5, 3, 1, 10, 7, 9, 8);
     }
 
     @Test
     void listSuffix() {
-        assertThat(testTree.listSuffix()).containsExactly(3, 5, 10, 9, 8, 7, 1);
+        assertThat(testTree.listKeysSuffix()).containsExactly(3, 5, 10, 9, 8, 7, 1);
     }
 
 }

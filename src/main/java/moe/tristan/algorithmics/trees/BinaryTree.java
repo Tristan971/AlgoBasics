@@ -5,9 +5,11 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Data
-public final class BinaryTree<T> {
+public class BinaryTree<T> {
 
     private T key;
     private BinaryTree<T> left;
@@ -35,52 +37,58 @@ public final class BinaryTree<T> {
         return left == null && right == null;
     }
 
-    public void visitPrefix(final Consumer<T> onKey) {
-        onKey.accept(key);
+    public void visitPrefix(final Consumer<BinaryTree<T>> onNode) {
+        onNode.accept(this);
         if (left != null) {
-            left.visitPrefix(onKey);
+            left.visitPrefix(onNode);
         }
         if (right != null) {
-            right.visitPrefix(onKey);
+            right.visitPrefix(onNode);
         }
     }
 
-    public void visitInfix(final Consumer<T> onKey) {
+    public void visitInfix(final Consumer<BinaryTree<T>> onNode) {
         if (left != null) {
-            left.visitInfix(onKey);
+            left.visitInfix(onNode);
         }
-        onKey.accept(key);
+        onNode.accept(this);
         if (right != null) {
-            right.visitInfix(onKey);
+            right.visitInfix(onNode);
         }
     }
 
-    public void visitSuffix(final Consumer<T> onKey) {
+    public void visitSuffix(final Consumer<BinaryTree<T>> onNode) {
         if (left != null) {
-            left.visitSuffix(onKey);
+            left.visitSuffix(onNode);
         }
         if (right != null) {
-            right.visitSuffix(onKey);
+            right.visitSuffix(onNode);
         }
-        onKey.accept(key);
+        onNode.accept(this);
     }
 
-    private List<T> listImpl(final Consumer<Consumer<T>> visitingStyle) {
-        final List<T> elems = new ArrayList<>(getSize());
+    public List<BinaryTree<T>> listNodes(final Consumer<Consumer<BinaryTree<T>>> visitingStyle) {
+        final List<BinaryTree<T>> elems = new ArrayList<>(getSize());
         visitingStyle.accept(elems::add);
         return elems;
     }
 
-    public List<T> listPrefix() {
-        return listImpl(this::visitPrefix);
+    public List<T> listKeysPrefix() {
+        return listNodes(this::visitPrefix).stream()
+                .map((Function<BinaryTree<T>, T>) BinaryTree::getKey)
+                .collect(Collectors.toList());
     }
 
-    public List<T> listInfix() {
-        return listImpl(this::visitInfix);
+    public List<T> listKeysInfix() {
+        return listNodes(this::visitInfix).stream()
+                .map((Function<BinaryTree<T>, T>) BinaryTree::getKey)
+                .collect(Collectors.toList());
     }
 
-    public List<T> listSuffix() {
-        return listImpl(this::visitSuffix);
+    public List<T> listKeysSuffix() {
+        return listNodes(this::visitSuffix).stream()
+                .map((Function<BinaryTree<T>, T>) BinaryTree::getKey)
+                .collect(Collectors.toList());
     }
 
 
